@@ -41,7 +41,6 @@ jobs:
 
       - name: Set up Maven Central Repository
         uses: actions/setup-java@v4
-        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
         with:
           distribution: 'temurin'
           java-version: 17
@@ -53,7 +52,6 @@ jobs:
           gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }} # gpg --armor --export-secret-keys YOUR_ID
 
       - name: Deploy to Maven Central Repository
-        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_TOKEN: ${{ secrets.OSSRH_TOKEN }}
@@ -65,17 +63,17 @@ jobs:
               echo No MAVEN_TOKEN, skipping...
           fi
 
-#      - name: Build and publish docker image
-#        if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/'))
-#        env:
-#          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-#        run: |
-#          GIT_TAG=${GITHUB_REF#refs/tags/}
-#          DOCKER_TAG=${GIT_TAG#refs/heads/main}
-#          REPO_NAME=${GITHUB_REPOSITORY#$GITHUB_REPOSITORY_OWNER/}
-#          if [ ! -z "DOCKER_PASSWORD" ]; then
-#              ./mvnw -ntp jib:build -Djib.to.image=${REPO_NAME}:${DOCKER_TAG} -Djib.to.auth.username="${{ secrets.DOCKER_USERNAME }}" -Djib.to.auth.password="${{ secrets.DOCKER_PASSWORD }}"
-#          else
-#              echo No MAVEN_TOKEN, skipping...
-#          fi
+      - name: Build and publish docker image
+        if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/'))
+        env:
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
+          GIT_TAG=${GITHUB_REF#refs/tags/}
+          DOCKER_TAG=${GIT_TAG#refs/heads/main}
+          REPO_NAME=${GITHUB_REPOSITORY#$GITHUB_REPOSITORY_OWNER/}
+          if [ ! -z "$DOCKER_PASSWORD" ]; then
+              ./mvnw -ntp jib:build -Djib.to.image=${REPO_NAME}:${DOCKER_TAG} -Djib.to.auth.username="${{ secrets.DOCKER_USERNAME }}" -Djib.to.auth.password="${{ secrets.DOCKER_PASSWORD }}"
+          else
+              echo No MAVEN_TOKEN, skipping...
+          fi
           
