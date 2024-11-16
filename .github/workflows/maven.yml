@@ -76,6 +76,6 @@ jobs:
           if [ ! -z "$DOCKER_PASSWORD" ]; then
               ./mvnw -ntp jib:build -Djib.to.image=${REPO_NAME}:${DOCKER_TAG} -Djib.to.auth.username="${{ secrets.DOCKER_USERNAME }}" -Djib.to.auth.password="${{ secrets.DOCKER_PASSWORD }}"
           else
-              echo No MAVEN_TOKEN, skipping...
+              echo No DOCKER_PASSWORD, skipping...
           fi
           
