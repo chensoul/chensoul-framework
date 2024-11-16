@@ -13,6 +13,25 @@
 
     <artifactId>chensoul-framework</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <url>https://github.com/chensoul/chensoul-framework</url>
+
+    <scm>
+        <!-- 使用 https：因为 publish-scm 插件-->
+        <url>https://github.com/chensoul/chensoul-framework.git</url>
+        <connection>scm:git:${project.scm.url}</connection>
+        <developerConnection>scm:git:${project.scm.url}</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
+    <issueManagement>
+        <system>Github</system>
+        <url>https://github.com/chensoul/chensoul-framework/issues</url>
+    </issueManagement>
+
+    <ciManagement>
+        <system>Github Actions</system>
+        <url>https://github.com/chensoul/chensoul-framework/actions</url>
+    </ciManagement>
 
     <properties>
         <spring-cloud.version>2023.0.3</spring-cloud.version>
