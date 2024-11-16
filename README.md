@@ -6,15 +6,11 @@
 [![sonar-quality-gate](https://sonarcloud.io/api/project_badges/measure?project=chensoul-framework&metric=alert_status)](https://sonarcloud.io/dashboard?id=chensoul-framework)
 [![sonar-coverage](https://sonarcloud.io/api/project_badges/measure?project=chensoul-framework&metric=coverage)](https://sonarcloud.io/dashboard?id=chensoul-framework)
 
-ChenSoul BOM and server-side library. This is the Bill of Materials and server-side library:
-
-- chensoul-dependencies
-- chensoul-framework
 
 ### Prerequisites
 
 - Jdk 17+
-- Maven 3.2.5
+- Maven 3.4.5
 
 ### How to?
 
