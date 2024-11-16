@@ -41,6 +41,7 @@ jobs:
 
       - name: Set up Maven Central Repository
         uses: actions/setup-java@v4
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
         with:
           distribution: 'temurin'
           java-version: 17
@@ -52,6 +53,7 @@ jobs:
           gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }} # gpg --armor --export-secret-keys YOUR_ID
 
       - name: Deploy to Maven Central Repository
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_TOKEN: ${{ secrets.OSSRH_TOKEN }}
