@@ -1,0 +1,21 @@
+
+
+version: 2
+updates:
+  # Dependencies for Maven
+  - package-ecosystem: 'maven'
+    directory: '/'
+    schedule:
+      interval: 'daily'
+    open-pull-requests-limit: 15
+    groups:
+      spring-boot:
+        patterns:
+          - 'org.springframework.boot:spring-boot*'
+
+  # Dependencies for GitHub Actions
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'daily'
+    open-pull-requests-limit: 10

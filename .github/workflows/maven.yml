@@ -1,0 +1,72 @@
+name: Maven Build
+
+on: [ push, pull_request ]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip ci]') && !contains(github.event.pull_request.title, '[skip ci]') && !contains(github.event.pull_request.title, '[ci skip]')"
+    timeout-minutes: 40
+    env:
+      SPRING_OUTPUT_ANSI_ENABLED: DETECT
+    strategy:
+      matrix:
+        distribution: [ 'temurin' ]
+        java: [ '17' ]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Java ${{ matrix.java }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: ${{ matrix.distribution }}
+          cache: 'maven'
+
+      - name: Build with Maven
+        run: |
+          chmod +x mvnw
+          ./mvnw -ntp clean verify
+
+      - name: Analyze code with SonarQube
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          if [ ! -z "$SONAR_TOKEN" ]; then
+              ./mvnw -ntp initialize sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.token=$SONAR_TOKEN -Dsonar.organization=chensoul
+          else
+              echo No SONAR_TOKEN, skipping...
+          fi
+
+      - name: Set up Maven Central Repository
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 17
+          cache: maven
+          server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
+          server-username: MAVEN_USERNAME # 变量
+          server-password: MAVEN_TOKEN # 变量
+          gpg-passphrase: GPG_PASSPHRASE # 变量
+          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }} # gpg --armor --export-secret-keys YOUR_ID
+
+      - name: Deploy to Maven Central Repository
+        env:
+          MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          MAVEN_TOKEN: ${{ secrets.OSSRH_TOKEN }}
+          GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+        run: |
+          if [ ! -z "$MAVEN_TOKEN" ]; then
+              ./mvnw deploy -ntp -Prelease -DskipTests
+          else
+              echo No MAVEN_TOKEN, skipping...
+          fi
+
+      - name: Build and publish docker image
+        if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/'))
+        run: |
+          GIT_TAG=${GITHUB_REF#refs/tags/}
+          DOCKER_TAG=${GIT_TAG#refs/heads/main}
+          REPO_NAME=${GITHUB_REPOSITORY#$GITHUB_REPOSITORY_OWNER/}
+          ./mvnw -ntp jib:build -Djib.to.image=${REPO_NAME}:${DOCKER_TAG} -Djib.to.auth.username="${{ secrets.DOCKER_USERNAME }}" -Djib.to.auth.password="${{ secrets.DOCKER_PASSWORD }}"
