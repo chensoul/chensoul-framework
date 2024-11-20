@@ -7,19 +7,22 @@
     <parent>
         <groupId>com.chensoul</groupId>
         <artifactId>chensoul-parent</artifactId>
-        <version>1.3.1</version>
+        <version>1.4.0-SNAPSHOT</version>
         <relativePath/>
     </parent>
 
     <artifactId>chensoul-framework</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>chensoul-framework</name>
+    <description>chensoul-framework</description>
     <url>https://github.com/chensoul/chensoul-framework</url>
 
     <scm>
-        <!-- 使用 https：因为 publish-scm 插件-->
-        <url>https://github.com/chensoul/chensoul-framework.git</url>
-        <connection>scm:git:${project.scm.url}</connection>
+        <connection>scm:git:https://github.com/chensoul/chensoul-framework.git</connection>
         <developerConnection>scm:git:${project.scm.url}</developerConnection>
+        <url>https://github.com/chensoul/chensoul-framework.git</url>
         <tag>HEAD</tag>
     </scm>
 
@@ -34,10 +37,19 @@
     </ciManagement>
 
     <properties>
+        <spring-boot.version>3.3.5</spring-boot.version>
         <spring-cloud.version>2023.0.3</spring-cloud.version>
         <logstash-logback-encoder.version>8.0</logstash-logback-encoder.version>
         <springdocs.version>2.6.0</springdocs.version>
     </properties>
+
+    <modules>
+        <module>chensoul-bom</module>
+        <module>chensoul-core</module>
+        <module>chensoul-web</module>
+        <module>chensoul-security</module>
+        <module>chensoul-test</module>
+    </modules>
 
     <dependencyManagement>
         <dependencies>
@@ -93,84 +105,4 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-aop</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-undertow</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-relational</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-actuator-autoconfigure</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-autoconfigure</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-starter-webmvc-api</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>net.logstash.logback</groupId>
-            <artifactId>logstash-logback-encoder</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>com.github.loki4j</groupId>
-            <artifactId>loki-logback-appender</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>io.micrometer</groupId>
-            <artifactId>micrometer-core</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.projectreactor</groupId>
-            <artifactId>reactor-core</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
 </project>
