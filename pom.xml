@@ -40,7 +40,7 @@
         <spring-boot.version>3.4.2</spring-boot.version>
         <spring-cloud.version>2024.0.0</spring-cloud.version>
         <logstash-logback-encoder.version>8.0</logstash-logback-encoder.version>
-        <springdocs.version>2.8.4</springdocs.version>
+        <springdocs.version>2.8.5</springdocs.version>
     </properties>
 
     <modules>
